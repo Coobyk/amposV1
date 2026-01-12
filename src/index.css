@@ -537,7 +537,7 @@ button {
 
 .slide-bullet {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
   font-size: 20px;
   font-weight: 500;
@@ -546,6 +546,7 @@ button {
   padding: 8px 12px;
   border-radius: 8px;
 }
+
 
 .slide-bullet-input {
   flex: 1;
@@ -582,6 +583,7 @@ button {
   background: var(--accent-primary);
   border-radius: 50%;
   flex-shrink: 0;
+  margin-top: 10px;
 }
 
 .delete-btn {
