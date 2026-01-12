@@ -17,6 +17,8 @@ function App() {
     }
   ]);
 
+  const [activeTool, setActiveTool] = useState('text');
+
   const handleAddSlide = () => {
     const newSlide = {
       id: slides.length + 1,
@@ -35,11 +37,36 @@ function App() {
     ));
   };
 
+  const handleToolSelect = (toolId) => {
+    setActiveTool(toolId);
+
+    // Tool Actions
+    if (toolId === 'text') {
+      // Focus the title input
+      const titleInput = document.querySelector('.slide-title-input');
+      if (titleInput) {
+        titleInput.focus();
+        titleInput.select();
+      }
+    }
+
+    if (toolId === 'image') {
+      // Highlight logic could go here, for now just log or simplified focus
+      const imageArea = document.querySelector('.slide-image-area');
+      if (imageArea) {
+        imageArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Flash effect could be added class
+        imageArea.style.opacity = '0.5';
+        setTimeout(() => imageArea.style.opacity = '1', 200);
+      }
+    }
+  };
+
   return (
     <div className="app-container">
       <div className="noise-overlay" />
 
-      <Sidebar />
+      <Sidebar activeTool={activeTool} onToolSelect={handleToolSelect} />
 
       <main className="main-content">
         <SlideNav

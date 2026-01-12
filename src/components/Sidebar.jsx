@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Type, Image, Sparkles, Palette, Settings, MoreHorizontal } from 'lucide-react';
 
 const tools = [
@@ -8,9 +8,7 @@ const tools = [
     { id: 'style', icon: Palette, label: 'Style' },
 ];
 
-const Sidebar = () => {
-    const [activeTool, setActiveTool] = useState('text');
-
+const Sidebar = ({ activeTool, onToolSelect }) => {
     return (
         <aside className="sidebar">
             <div className="sidebar-logo">A</div>
@@ -20,7 +18,7 @@ const Sidebar = () => {
                     <button
                         key={id}
                         className={`sidebar-tool ${activeTool === id ? 'active' : ''}`}
-                        onClick={() => setActiveTool(id)}
+                        onClick={() => onToolSelect(id)}
                     >
                         <Icon size={22} className={activeTool === id ? "text-indigo-400" : ""} />
                         <span className="sidebar-tool-label">{label}</span>
