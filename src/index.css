@@ -11,7 +11,8 @@
   --text-muted: #52525b;
   --accent-primary: #6366f1;
   --accent-secondary: #a855f7;
-  --accent-glow: rgba(99, 102, 241, 0.3);
+  --accent-glow: rgba(99, 102, 241, 0.4);
+  --ambient-light: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.15), transparent 70%);
 }
 
 /* ===== Reset & Base ===== */
@@ -75,6 +76,18 @@ button {
   z-index: 1000;
 }
 
+.glow-effect {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: var(--accent-primary);
+  filter: blur(200px);
+  opacity: 0.15;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
 /* ===== Sidebar ===== */
 .sidebar {
   width: 80px;
@@ -124,12 +137,25 @@ button {
 
 .sidebar-tool:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-tool.active {
   color: var(--accent-primary);
   background: rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
+}
+
+.active-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  background: var(--accent-primary);
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 10px var(--accent-primary);
 }
 
 .sidebar-tool-label {
@@ -402,6 +428,36 @@ button {
   margin-bottom: 12px;
 }
 
+.slide-title-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 64px;
+  font-weight: 800;
+  color: #18181b;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.slide-title-input::placeholder {
+  color: #e4e4e7;
+}
+
+.slide-title-input.large {
+  font-size: 82px;
+  font-weight: 800;
+  letter-spacing: -3px;
+  line-height: 1;
+  background: -webkit-linear-gradient(45deg, #18181b, #52525b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* Note: text-fill-color transparent breaks input visibility in some browsers, simpler fallback for now */
+  -webkit-text-fill-color: #18181b;
+}
+
 .slide-title-underline {
   width: 80px;
   height: 4px;
@@ -411,8 +467,9 @@ button {
 }
 
 .slide-subtitle {
-  font-size: 14px;
-  color: #a1a1aa;
+  font-size: 16px;
+  color: #71717a;
+  font-weight: 400;
   font-style: italic;
   margin-bottom: 48px;
 }
@@ -421,21 +478,41 @@ button {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .slide-bullet {
   display: flex;
   align-items: center;
   gap: 16px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
   color: #3f3f46;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.slide-bullet-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 
 .slide-bullet:hover {
   color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.05);
+  transform: translateX(10px);
+}
+
+.image-placeholder-icon {
+  color: #e4e4e7;
+  margin-bottom: 16px;
 }
 
 .slide-bullet-dot {
@@ -531,8 +608,39 @@ button {
   width: 80%;
 }
 
-.layout-preview-line:nth-child(2) {
-  width: 60%;
+.layout-mini-grid {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 8px;
+  gap: 8px;
+}
+
+.layout-mini-grid.type-centered {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.layout-mini-grid.type-split {
+  flex-direction: row;
+  align-items: center;
+}
+
+.layout-mini-grid.type-split .mini-image {
+  width: 40%;
+  height: 80%;
+}
+
+.layout-mini-grid.type-split-right {
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.layout-mini-grid.type-split-right .mini-image {
+  width: 40%;
+  height: 80%;
 }
 
 .layout-option-label {

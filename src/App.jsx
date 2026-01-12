@@ -29,6 +29,12 @@ function App() {
     setActiveSlide(slides.length);
   };
 
+  const updateSlide = (id, updates) => {
+    setSlides(slides.map(slide =>
+      slide.id === id ? { ...slide, ...updates } : slide
+    ));
+  };
+
   return (
     <div className="app-container">
       <div className="noise-overlay" />
@@ -45,7 +51,10 @@ function App() {
 
         <div className="editor-area">
           <div className="canvas-wrapper">
-            <SlideCanvas slide={slides[activeSlide]} />
+            <SlideCanvas
+              slide={slides[activeSlide]}
+              onUpdate={(updates) => updateSlide(slides[activeSlide].id, updates)}
+            />
             <LayoutPicker />
           </div>
         </div>
