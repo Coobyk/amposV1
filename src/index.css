@@ -946,7 +946,8 @@ button {
 /* ===== Style Panel ===== */
 .style-panel {
   position: absolute;
-  left: 0;
+  left: 80px;
+  /* Position next to sidebar */
   top: 0;
   bottom: 0;
   width: 320px;
@@ -963,9 +964,31 @@ button {
   box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
 }
 
+.style-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .style-panel-title {
   font-size: 20px;
   font-weight: 700;
+  color: var(--text-primary);
+}
+
+.style-panel-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.style-panel-close:hover {
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
 }
 

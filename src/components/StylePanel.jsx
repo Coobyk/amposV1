@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Type, Check, Palette } from 'lucide-react';
+import { Sun, Moon, Type, Check, Palette, X } from 'lucide-react';
 
 const fonts = [
     { id: 'minimal', label: 'Minimal', family: "'Inter', sans-serif", heading: "'Outfit', sans-serif" },
@@ -18,10 +18,15 @@ const colors = [
     '#18181b', // Zinc (Black/White)
 ];
 
-const StylePanel = ({ theme, onThemeChange }) => {
+const StylePanel = ({ theme, onThemeChange, onClose }) => {
     return (
         <div className="style-panel">
-            <h2 className="style-panel-title">Style & Theme</h2>
+            <div className="style-panel-header">
+                <h2 className="style-panel-title">Style & Theme</h2>
+                <button className="style-panel-close" onClick={onClose}>
+                    <X size={20} />
+                </button>
+            </div>
 
             {/* Mode Toggle */}
             <div className="style-group">
