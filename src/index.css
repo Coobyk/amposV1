@@ -915,6 +915,18 @@ button {
   }
 }
 
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
 .slide-content {
   animation: fadeInUp 0.4s ease-out;
 }

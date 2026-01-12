@@ -18,9 +18,9 @@ const colors = [
     '#18181b', // Zinc (Black/White)
 ];
 
-const StylePanel = ({ theme, onThemeChange, onClose }) => {
+const StylePanel = ({ theme, onThemeChange, onClose, isClosing }) => {
     return (
-        <div className="style-panel">
+        <div className={`style-panel ${isClosing ? 'closing' : ''}`}>
             <div className="style-panel-header">
                 <h2 className="style-panel-title">Style & Theme</h2>
                 <button className="style-panel-close" onClick={onClose}>

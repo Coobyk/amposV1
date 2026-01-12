@@ -9,6 +9,7 @@ import StylePanel from './components/StylePanel';
 function App() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [activeTool, setActiveTool] = useState('text');
+  const [isClosingStylePanel, setIsClosingStylePanel] = useState(false);
 
   // Theme State
   const [theme, setTheme] = useState({
@@ -149,7 +150,11 @@ function App() {
 
           {/* Style Panel Overlay */}
           {activeTool === 'style' && (
-            <StylePanel theme={theme} onThemeChange={setTheme} />
+            <StylePanel
+              theme={theme}
+              onThemeChange={setTheme}
+              onClose={() => setActiveTool('text')}
+            />
           )}
         </div>
       </main>
