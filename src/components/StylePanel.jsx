@@ -20,7 +20,7 @@ const colors = [
 
 const StylePanel = ({ theme, onThemeChange }) => {
     return (
-        <div className="style-panel bg-white/5 backdrop-blur-xl border-l border-white/10 w-80 h-full p-6 flex flex-col gap-8 absolute right-0 top-0 z-50 animate-in slide-in-from-right duration-300">
+        <div className="style-panel bg-zinc-900/90 backdrop-blur-xl border-l border-white/10 w-80 h-full p-6 flex flex-col gap-8 absolute right-0 top-0 z-[100] animate-in slide-in-from-right duration-300 shadow-2xl">
             <h2 className="text-xl font-bold text-white mb-2">Style & Theme</h2>
 
             {/* Mode Toggle */}
