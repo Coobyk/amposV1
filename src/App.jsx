@@ -94,7 +94,11 @@ function App() {
   const handleToolSelect = (toolId) => {
     // Toggle style panel if already active
     if (toolId === 'style' && activeTool === 'style') {
-      setActiveTool('text');
+      setIsClosingStylePanel(true);
+      setTimeout(() => {
+        setActiveTool('text');
+        setIsClosingStylePanel(false);
+      }, 300); // Match animation duration
       return;
     }
 
@@ -153,7 +157,14 @@ function App() {
             <StylePanel
               theme={theme}
               onThemeChange={setTheme}
-              onClose={() => setActiveTool('text')}
+              onClose={() => {
+                setIsClosingStylePanel(true);
+                setTimeout(() => {
+                  setActiveTool('text');
+                  setIsClosingStylePanel(false);
+                }, 300);
+              }}
+              isClosing={isClosingStylePanel}
             />
           )}
         </div>
