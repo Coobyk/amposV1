@@ -3,6 +3,7 @@ import { Plus, X, Trash2 } from 'lucide-react';
 
 const SlideCanvas = ({ slide, onUpdate }) => {
     if (!slide) return null;
+    const fileInputRef = useRef(null);
 
     // Auto-resize helper
     const adjustHeight = (el) => {
@@ -14,6 +15,12 @@ const SlideCanvas = ({ slide, onUpdate }) => {
     // Handler for Title
     const handleTitleChange = (e) => {
         onUpdate({ title: e.target.value });
+        adjustHeight(e.target);
+    };
+
+    // Handler for Subtitle
+    const handleSubtitleChange = (e) => {
+        onUpdate({ subtitle: e.target.value });
         adjustHeight(e.target);
     };
 
@@ -33,6 +40,37 @@ const SlideCanvas = ({ slide, onUpdate }) => {
         onUpdate({ content: newContent });
     };
 
+    // Image Handlers
+    const handleImageClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) handleImageFile(file);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files?.[0];
+        if (file) handleImageFile(file);
+    };
+
+    const handleImageFile = (file) => {
+        // Check if it is an image
+        if (!file.type.startsWith('image/')) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            onUpdate({ image: e.target.result });
+        };
+        reader.readAsDataURL(file);
+    };
+
     const getLayoutClasses = (type) => {
         switch (type) {
             case 'centered': return 'flex-col items-center text-center justify-center pt-20';
@@ -50,14 +88,38 @@ const SlideCanvas = ({ slide, onUpdate }) => {
             <div className="glow-effect" style={{ left: '-10%', top: '-10%', opacity: 0.08, background: 'var(--accent-secondary)' }} />
 
             <div className={`slide-content ${getLayoutClasses(slide.type)}`}>
-                {/* Image Area - Hide for text-only layouts */}
+                {/* Image Area */}
                 {slide.type !== 'centered' && slide.type !== 'left-align' && (
-                    <div className="slide-image-area">
-                        <div className="image-placeholder-icon">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
-                        </div>
-                        <span className="slide-image-placeholder">Drop Image Here</span>
-                        <span className="slide-image-source">Supports JPG, PNG, WebP</span>
+                    <div
+                        className="slide-image-area cursor-pointer hover:bg-black/5 transition-colors relative group"
+                        onClick={handleImageClick}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                    >
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                        />
+
+                        {slide.image ? (
+                            <div className="w-full h-full relative">
+                                <img src={slide.image} alt="Slide" className="w-full h-full object-cover rounded-xl" />
+                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-medium transition-opacity rounded-xl">
+                                    Change Image
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="image-placeholder-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                                </div>
+                                <span className="slide-image-placeholder">Drop Image Here</span>
+                                <span className="slide-image-source">Supports JPG, PNG, WebP</span>
+                            </>
+                        )}
                     </div>
                 )}
 
@@ -76,15 +138,21 @@ const SlideCanvas = ({ slide, onUpdate }) => {
 
                     <div className="slide-title-underline" />
 
-                    <p className="slide-subtitle">
-                        {slide.type === 'cover' ? 'Presentation Subtitle' : '(Simple sans-serif font with slight noise effect)'}
-                    </p>
+                    {/* Editable Subtitle */}
+                    <textarea
+                        rows={1}
+                        value={slide.subtitle || ""}
+                        onChange={handleSubtitleChange}
+                        onInput={(e) => adjustHeight(e.target)}
+                        className={`slide-subtitle-input ${slide.type === 'centered' ? 'text-center' : ''}`}
+                        placeholder={slide.type === 'cover' ? 'Presentation Subtitle' : 'Add a subtitle...'}
+                    />
 
                     {/* Editable Content */}
                     <ul className={`slide-bullets ${slide.type === 'centered' ? 'items-center' : 'items-start'}`}>
                         {slide.content.map((item, i) => (
-                            <li key={i} className="slide-bullet group/item relative pr-8">
-                                <span className="slide-bullet-dot mt-2" />
+                            <li key={i} className="slide-bullet group/item relative pr-8 items-start">
+                                <span className="slide-bullet-dot mt-3" /> {/* Fixed top alignment */}
                                 <textarea
                                     rows={1}
                                     value={item}
@@ -97,7 +165,7 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                                 {/* Delete Action */}
                                 <button
                                     onClick={() => handleDeleteContent(i)}
-                                    className="absolute right-0 top-1/2 -translate-y-1/2 p-2 opacity-0 group-hover/item:opacity-100 text-zinc-400 hover:text-red-500 transition-all"
+                                    className="absolute right-0 top-1.5 p-2 opacity-0 group-hover/item:opacity-100 text-zinc-400 hover:text-red-500 transition-all"
                                 >
                                     <Trash2 size={16} />
                                 </button>
@@ -106,7 +174,7 @@ const SlideCanvas = ({ slide, onUpdate }) => {
 
                         {/* Add Item Button */}
                         <li className="slide-bullet opacity-50 hover:opacity-100 cursor-pointer w-full" onClick={handleAddContent}>
-                            <div className="w-2.5 h-2.5 rounded-full border border-zinc-400 flex items-center justify-center mr-0.5">
+                            <div className="w-2.5 h-2.5 rounded-full border border-zinc-400 flex items-center justify-center mr-0.5 mt-1.5">
                                 <Plus size={8} className="text-zinc-500" />
                             </div>
                             <span className="text-zinc-400 font-medium">Add item</span>

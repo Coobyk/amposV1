@@ -2,17 +2,16 @@
 
 /* ===== CSS Variables ===== */
 :root {
-  --bg-primary: #0a0a0c;
-  --bg-secondary: #16161b;
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --border-glass: rgba(255, 255, 255, 0.08);
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
   --text-primary: #ffffff;
   --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
+
   --accent-primary: #6366f1;
-  --accent-secondary: #a855f7;
-  --accent-glow: rgba(99, 102, 241, 0.4);
-  --ambient-light: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.15), transparent 70%);
+  --accent-secondary: rgba(99, 102, 241, 0.1);
+
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
 }
 
 /* ===== Reset & Base ===== */
@@ -467,10 +466,10 @@ button {
   outline: none;
   resize: none;
   overflow: hidden;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-heading);
   font-size: 64px;
   font-weight: 800;
-  color: #18181b;
+  color: var(--text-primary);
   letter-spacing: -2px;
   line-height: 1.1;
   margin-bottom: 12px;
@@ -493,7 +492,24 @@ button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   /* Note: text-fill-color transparent breaks input visibility in some browsers, simpler fallback for now */
-  -webkit-text-fill-color: #18181b;
+  -webkit-text-fill-color: var(--text-primary);
+}
+
+.slide-subtitle-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 20px;
+  margin-bottom: 32px;
+}
+
+.slide-subtitle-input.text-center {
+  text-align: center;
 }
 
 .slide-title-underline {
@@ -538,7 +554,7 @@ button {
   outline: none;
   resize: none;
   overflow: hidden;
-  font-family: inherit;
+  font-family: var(--font-body);
   font-size: inherit;
   font-weight: inherit;
   color: inherit;

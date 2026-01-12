@@ -1,23 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 import Sidebar from './components/Sidebar';
 import SlideNav from './components/SlideNav';
 import SlideCanvas from './components/SlideCanvas';
 import LayoutPicker from './components/LayoutPicker';
+import StylePanel from './components/StylePanel';
 
 function App() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [activeTool, setActiveTool] = useState('text');
+
+  // Theme State
+  const [theme, setTheme] = useState({
+    mode: 'dark',
+    accent: '#6366f1',
+    font: 'minimal'
+  });
+
   const [slides, setSlides] = useState([
     {
       id: 1,
       title: 'AESTHETIC TITLE',
+      subtitle: 'Presentation Subtitle',
       content: ['Some description', 'Other text', 'Another bullet point'],
       image: null,
       type: 'cover'
     }
   ]);
 
-  const [activeTool, setActiveTool] = useState('text');
+  // Apply Theme Side Effects
+  useEffect(() => {
+    const root = document.documentElement;
+
+    // Apply Mode
+    if (theme.mode === 'light') {
+      root.style.setProperty('--bg-primary', '#ffffff');
+      root.style.setProperty('--bg-secondary', '#f4f4f5');
+      root.style.setProperty('--text-primary', '#18181b');
+      root.style.setProperty('--text-secondary', '#71717a');
+    } else {
+      root.style.setProperty('--bg-primary', '#09090b');
+      root.style.setProperty('--bg-secondary', '#18181b');
+      root.style.setProperty('--text-primary', '#ffffff');
+      root.style.setProperty('--text-secondary', '#a1a1aa');
+    }
+
+    // Apply Accent
+    root.style.setProperty('--accent-primary', theme.accent);
+    root.style.setProperty('--accent-secondary', `${theme.accent}20`); // 20 hex alpha
+
+    // Apply Fonts
+    let headingFont = "'Outfit', sans-serif";
+    let bodyFont = "'Inter', sans-serif";
+
+    if (theme.font === 'classic') {
+      headingFont = "'Times New Roman', serif";
+      bodyFont = "'Times New Roman', serif";
+    } else if (theme.font === 'bold') {
+      headingFont = "'Arial Black', sans-serif";
+      bodyFont = "'Arial', sans-serif";
+    }
+
+    root.style.setProperty('--font-heading', headingFont);
+    root.style.setProperty('--font-body', bodyFont);
+
+  }, [theme]);
 
   const handleAddSlide = () => {
     const newSlide = {
@@ -38,6 +85,12 @@ function App() {
   };
 
   const handleToolSelect = (toolId) => {
+    // Toggle style panel if already active
+    if (toolId === 'style' && activeTool === 'style') {
+      setActiveTool('text');
+      return;
+    }
+
     setActiveTool(toolId);
 
     // Tool Actions
@@ -51,24 +104,24 @@ function App() {
     }
 
     if (toolId === 'image') {
-      // Highlight logic could go here, for now just log or simplified focus
+      // Highlight logic
       const imageArea = document.querySelector('.slide-image-area');
       if (imageArea) {
         imageArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Flash effect could be added class
-        imageArea.style.opacity = '0.5';
-        setTimeout(() => imageArea.style.opacity = '1', 200);
+        imageArea.style.transition = 'all 0.3s';
+        imageArea.style.boxShadow = `0 0 0 4px ${theme.accent}`;
+        setTimeout(() => imageArea.style.boxShadow = 'none', 500);
       }
     }
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${theme.mode}`}>
       <div className="noise-overlay" />
 
       <Sidebar activeTool={activeTool} onToolSelect={handleToolSelect} />
 
-      <main className="main-content">
+      <main className="main-content relative overflow-hidden">
         <SlideNav
           slides={slides}
           activeSlide={activeSlide}
@@ -76,7 +129,7 @@ function App() {
           onAddSlide={handleAddSlide}
         />
 
-        <div className="editor-area">
+        <div className="editor-area relative">
           <div className="canvas-wrapper">
             <SlideCanvas
               slide={slides[activeSlide]}
@@ -87,6 +140,11 @@ function App() {
               onLayoutSelect={(layoutId) => updateSlide(slides[activeSlide].id, { type: layoutId })}
             />
           </div>
+
+          {/* Style Panel Overlay */}
+          {activeTool === 'style' && (
+            <StylePanel theme={theme} onThemeChange={setTheme} />
+          )}
         </div>
       </main>
     </div>
