@@ -91,6 +91,103 @@ button {
   z-index: 0;
 }
 
+/* Gradient Animations - Position Specific */
+.glow-top-left {
+  animation: floatTopLeft 18s ease-in-out infinite;
+}
+
+.glow-top-right {
+  animation: floatTopRight 20s ease-in-out infinite;
+}
+
+.glow-bottom-left {
+  animation: floatBottomLeft 17s ease-in-out infinite;
+}
+
+.glow-bottom-right {
+  animation: floatBottomRight 19s ease-in-out infinite;
+}
+
+@keyframes floatTopLeft {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(20px, 15px) scale(1.05);
+  }
+
+  50% {
+    transform: translate(15px, 30px) scale(0.95);
+  }
+
+  75% {
+    transform: translate(-10px, 20px) scale(1.08);
+  }
+}
+
+@keyframes floatTopRight {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(-15px, 20px) scale(1.06);
+  }
+
+  50% {
+    transform: translate(-25px, 25px) scale(0.92);
+  }
+
+  75% {
+    transform: translate(-10px, 15px) scale(1.1);
+  }
+}
+
+@keyframes floatBottomLeft {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(25px, -20px) scale(0.94);
+  }
+
+  50% {
+    transform: translate(10px, -15px) scale(1.07);
+  }
+
+  75% {
+    transform: translate(20px, -25px) scale(0.98);
+  }
+}
+
+@keyframes floatBottomRight {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(-20px, -15px) scale(1.04);
+  }
+
+  50% {
+    transform: translate(-10px, -25px) scale(0.96);
+  }
+
+  75% {
+    transform: translate(-18px, -10px) scale(1.09);
+  }
+}
+
 /* ===== Sidebar ===== */
 .sidebar {
   width: 80px;
@@ -806,6 +903,18 @@ button {
   }
 }
 
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .slide-content {
   animation: fadeInUp 0.4s ease-out;
 }
@@ -837,21 +946,21 @@ button {
 /* ===== Style Panel ===== */
 .style-panel {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   bottom: 0;
   width: 320px;
   background: rgba(9, 9, 11, 0.95);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-left: 1px solid var(--border-glass);
+  border-right: 1px solid var(--border-glass);
   padding: 24px;
   z-index: 100;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
+  animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
 }
 
 .style-panel-title {

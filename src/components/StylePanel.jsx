@@ -3,8 +3,8 @@ import { Sun, Moon, Type, Check, Palette } from 'lucide-react';
 
 const fonts = [
     { id: 'minimal', label: 'Minimal', family: "'Inter', sans-serif", heading: "'Outfit', sans-serif" },
-    { id: 'classic', label: 'Classic', family: "'Times New Roman', serif", heading: "'Times New Roman', serif" },
-    { id: 'bold', label: 'Bold', family: "'Arial', sans-serif", heading: "'Arial Black', sans-serif" }
+    { id: 'bold', label: 'Bold', family: "'Arial', sans-serif", heading: "'Arial Black', sans-serif" },
+    { id: 'classic', label: 'Classic', family: "'Times New Roman', serif", heading: "'Times New Roman', serif" }
 ];
 
 const colors = [

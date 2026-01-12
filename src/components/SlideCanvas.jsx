@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Plus, X, Trash2 } from 'lucide-react';
 
 const SlideCanvas = ({ slide, onUpdate }) => {
@@ -71,6 +71,20 @@ const SlideCanvas = ({ slide, onUpdate }) => {
         reader.readAsDataURL(file);
     };
 
+    const [gradientPosition, setGradientPosition] = useState(null);
+
+    // Set random gradient position on mount
+    useEffect(() => {
+        const positions = [
+            { name: 'top-left', style: { left: '-10%', top: '-10%' } },
+            { name: 'top-right', style: { right: '-10%', top: '-10%' } },
+            { name: 'bottom-left', style: { left: '-10%', bottom: '-10%' } },
+            { name: 'bottom-right', style: { right: '-10%', bottom: '-10%' } }
+        ];
+        const randomPos = positions[Math.floor(Math.random() * positions.length)];
+        setGradientPosition(randomPos);
+    }, [slide?.id]); // Re-randomize when slide changes
+
     const getLayoutClasses = (type) => {
         switch (type) {
             case 'centered': return 'flex-col items-center text-center justify-center pt-20';
@@ -83,9 +97,23 @@ const SlideCanvas = ({ slide, onUpdate }) => {
 
     return (
         <div className={`slide-canvas ${slide.type === 'full-image' ? 'p-0' : ''}`}>
-            {/* Background Ambience */}
-            <div className="glow-effect" style={{ right: '-10%', bottom: '-10%' }} />
-            <div className="glow-effect" style={{ left: '-10%', top: '-10%', opacity: 0.08, background: 'var(--accent-secondary)' }} />
+            {/* Background Ambience - Dynamic Position */}
+            {gradientPosition && (
+                <>
+                    <div
+                        className={`glow-effect glow-${gradientPosition.name}`}
+                        style={gradientPosition.style}
+                    />
+                    <div
+                        className={`glow-effect glow-${gradientPosition.name}`}
+                        style={{
+                            ...gradientPosition.style,
+                            opacity: 0.08,
+                            background: 'var(--accent-secondary)'
+                        }}
+                    />
+                </>
+            )}
 
             <div className={`slide-content ${getLayoutClasses(slide.type)}`}>
                 {/* Image Area */}
