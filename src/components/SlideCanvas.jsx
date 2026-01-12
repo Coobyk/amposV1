@@ -1,17 +1,35 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Plus, X, Trash2 } from 'lucide-react';
 
 const SlideCanvas = ({ slide, onUpdate }) => {
     if (!slide) return null;
 
+    // Auto-resize helper
+    const adjustHeight = (el) => {
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+    };
+
     // Handler for Title
     const handleTitleChange = (e) => {
         onUpdate({ title: e.target.value });
+        adjustHeight(e.target);
     };
 
     // Handler for Bullets
     const handleContentChange = (index, newValue) => {
         const newContent = [...slide.content];
         newContent[index] = newValue;
+        onUpdate({ content: newContent });
+    };
+
+    const handleAddContent = () => {
+        onUpdate({ content: [...slide.content, ''] });
+    };
+
+    const handleDeleteContent = (index) => {
+        const newContent = slide.content.filter((_, i) => i !== index);
         onUpdate({ content: newContent });
     };
 
@@ -44,13 +62,15 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                 )}
 
                 {/* Text Area */}
-                <div className={`slide-text-area ${slide.type === 'centered' ? 'items-center' : ''}`}>
+                <div className={`slide-text-area ${slide.type === 'centered' ? 'items-center text-center' : ''}`}>
+
                     {/* Editable Title */}
-                    <input
-                        type="text"
+                    <textarea
+                        rows={1}
                         value={slide.title}
                         onChange={handleTitleChange}
-                        className={`slide-title-input ${slide.type === 'cover' ? 'large' : ''}`}
+                        onInput={(e) => adjustHeight(e.target)}
+                        className={`slide-title-input ${slide.type === 'cover' ? 'large' : ''} ${slide.type === 'centered' ? 'text-center' : ''}`}
                         placeholder="Slide Title"
                     />
 
@@ -61,38 +81,36 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                     </p>
 
                     {/* Editable Content */}
-                    <ul className="slide-bullets">
+                    <ul className={`slide-bullets ${slide.type === 'centered' ? 'items-center' : 'items-start'}`}>
                         {slide.content.map((item, i) => (
-                            <li key={i} className="slide-bullet">
-                                <span className="slide-bullet-dot" />
-                                <input
-                                    type="text"
+                            <li key={i} className="slide-bullet group/item relative pr-8">
+                                <span className="slide-bullet-dot mt-2" />
+                                <textarea
+                                    rows={1}
                                     value={item}
                                     onChange={(e) => handleContentChange(i, e.target.value)}
-                                    className="slide-bullet-input"
+                                    onInput={(e) => adjustHeight(e.target)}
+                                    className={`slide-bullet-input ${slide.type === 'centered' ? 'text-center' : 'text-left'}`}
                                     placeholder="List item..."
                                 />
-                            </li>
-                        ))}
-                        {/* Always show one empty bullet if list is empty to allow typing */}
-                        {slide.content.length === 0 && (
-                            <li className="slide-bullet opacity-50">
-                                <span className="slide-bullet-dot" />
+
+                                {/* Delete Action */}
                                 <button
-                                    onClick={() => onUpdate({ content: ['New item'] })}
-                                    className="text-left w-full hover:text-indigo-500 transition-colors"
+                                    onClick={() => handleDeleteContent(i)}
+                                    className="absolute right-0 top-1/2 -translate-y-1/2 p-2 opacity-0 group-hover/item:opacity-100 text-zinc-400 hover:text-red-500 transition-all"
                                 >
-                                    Click to add text...
+                                    <Trash2 size={16} />
                                 </button>
                             </li>
-                        )}
-                        {/* Add button */}
-                        {slide.content.length > 0 && (
-                            <li className="slide-bullet opacity-50 hover:opacity-100 cursor-pointer" onClick={() => onUpdate({ content: [...slide.content, ''] })}>
-                                <span className="slide-bullet-dot bg-zinc-300" />
-                                <span className="text-zinc-400">Add item</span>
-                            </li>
-                        )}
+                        ))}
+
+                        {/* Add Item Button */}
+                        <li className="slide-bullet opacity-50 hover:opacity-100 cursor-pointer w-full" onClick={handleAddContent}>
+                            <div className="w-2.5 h-2.5 rounded-full border border-zinc-400 flex items-center justify-center mr-0.5">
+                                <Plus size={8} className="text-zinc-500" />
+                            </div>
+                            <span className="text-zinc-400 font-medium">Add item</span>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -465,6 +465,8 @@ button {
   background: transparent;
   border: none;
   outline: none;
+  resize: none;
+  overflow: hidden;
   font-family: 'Outfit', sans-serif;
   font-size: 64px;
   font-weight: 800;
@@ -472,6 +474,10 @@ button {
   letter-spacing: -2px;
   line-height: 1.1;
   margin-bottom: 12px;
+}
+
+.slide-title-input.text-center {
+  text-align: center;
 }
 
 .slide-title-input::placeholder {
@@ -530,10 +536,17 @@ button {
   background: transparent;
   border: none;
   outline: none;
+  resize: none;
+  overflow: hidden;
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
   color: inherit;
+  line-height: 1.5;
+}
+
+.slide-bullet-input.text-center {
+  text-align: center;
 }
 
 .slide-bullet:hover {
