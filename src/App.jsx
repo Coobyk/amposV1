@@ -55,7 +55,10 @@ function App() {
               slide={slides[activeSlide]}
               onUpdate={(updates) => updateSlide(slides[activeSlide].id, updates)}
             />
-            <LayoutPicker />
+            <LayoutPicker
+              activeSlide={slides[activeSlide]}
+              onLayoutSelect={(layoutId) => updateSlide(slides[activeSlide].id, { type: layoutId })}
+            />
           </div>
         </div>
       </main>
