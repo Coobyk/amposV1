@@ -8,31 +8,44 @@ import LayoutPicker from './components/LayoutPicker';
 function App() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [slides, setSlides] = useState([
-    { id: 1, title: 'AESTHETIC TITLE', content: ['Some description', 'Other text', 'Another bullet point'], image: null, type: 'cover' }
+    {
+      id: 1,
+      title: 'AESTHETIC TITLE',
+      content: ['Some description', 'Other text', 'Another bullet point'],
+      image: null,
+      type: 'cover'
+    }
   ]);
 
+  const handleAddSlide = () => {
+    const newSlide = {
+      id: slides.length + 1,
+      title: 'New Slide',
+      content: [],
+      image: null,
+      type: 'content'
+    };
+    setSlides([...slides, newSlide]);
+    setActiveSlide(slides.length);
+  };
+
   return (
-    <div className="flex h-screen w-screen bg-primary overflow-hidden relative">
+    <div className="app-container">
       <div className="noise-overlay" />
-      
-      {/* Left Sidebar */}
+
       <Sidebar />
 
-      <main className="flex-1 flex flex-col relative h-full">
-        {/* Top Navigation */}
-        <SlideNav 
-          slides={slides} 
-          activeSlide={activeSlide} 
-          onSelectSlide={setActiveSlide} 
-          onAddSlide={() => setSlides([...slides, { id: slides.length + 1, title: 'New Slide', content: [], type: 'content' }])}
+      <main className="main-content">
+        <SlideNav
+          slides={slides}
+          activeSlide={activeSlide}
+          onSelectSlide={setActiveSlide}
+          onAddSlide={handleAddSlide}
         />
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col relative overflow-hidden px-8 py-4">
-          <div className="flex-1 flex flex-col glass-panel rounded-3xl overflow-hidden relative shadow-2xl">
+        <div className="editor-area">
+          <div className="canvas-wrapper">
             <SlideCanvas slide={slides[activeSlide]} />
-            
-            {/* Bottom Layout Picker */}
             <LayoutPicker />
           </div>
         </div>
