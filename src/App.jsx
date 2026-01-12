@@ -38,11 +38,17 @@ function App() {
       root.style.setProperty('--bg-secondary', '#f4f4f5');
       root.style.setProperty('--text-primary', '#18181b');
       root.style.setProperty('--text-secondary', '#71717a');
+
+      root.style.setProperty('--bg-paper', '#ffffff');
+      root.style.setProperty('--text-paper', '#18181b');
     } else {
       root.style.setProperty('--bg-primary', '#09090b');
       root.style.setProperty('--bg-secondary', '#18181b');
       root.style.setProperty('--text-primary', '#ffffff');
       root.style.setProperty('--text-secondary', '#a1a1aa');
+
+      root.style.setProperty('--bg-paper', '#18181b'); // Dark paper for dark mode
+      root.style.setProperty('--text-paper', '#ffffff');
     }
 
     // Apply Accent

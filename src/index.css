@@ -361,12 +361,13 @@ button {
 /* ===== Slide Canvas ===== */
 .slide-canvas {
   flex: 1;
-  background: #ffffff;
-  color: #18181b;
+  background: var(--bg-paper);
+  color: var(--text-paper);
   display: flex;
   padding: 64px;
   position: relative;
   overflow: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .slide-canvas-gradient {
@@ -419,9 +420,11 @@ button {
 }
 
 .slide-image-area {
+  flex: 1;
+  /* Take simplified flex share */
   width: 100%;
-  height: 100%;
-  min-height: 400px;
+  height: auto;
+  min-height: 300px;
   background: #fafafa;
   border: 1px solid #e4e4e7;
   border-radius: 16px;
@@ -432,6 +435,15 @@ button {
   position: relative;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   overflow: hidden;
+}
+
+/* Specific override for split layouts to prevent full blockage */
+.slide-content.flex-row .slide-image-area,
+.slide-content.flex-row-reverse .slide-image-area {
+  flex: 0 0 40%;
+  /* Fixed 40% width in split view */
+  height: auto;
+  aspect-ratio: 3/4;
 }
 
 .slide-image-placeholder {
@@ -456,7 +468,7 @@ button {
 .slide-title {
   font-size: 64px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: var(--text-paper);
   letter-spacing: -2px;
   line-height: 1.1;
   margin-bottom: 12px;
@@ -472,7 +484,7 @@ button {
   font-family: var(--font-heading);
   font-size: 64px;
   font-weight: 800;
-  color: var(--text-primary);
+  color: var(--text-paper);
   letter-spacing: -2px;
   line-height: 1.1;
   margin-bottom: 12px;
