@@ -584,6 +584,26 @@ button {
   flex-shrink: 0;
 }
 
+.delete-btn {
+  position: absolute;
+  right: 0;
+  top: 6px;
+  padding: 8px;
+  opacity: 0;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  color: #ef4444;
+  /* Red */
+}
+
+.slide-bullet:hover .delete-btn {
+  opacity: 1;
+}
+
 .slide-empty-hint {
   font-size: 20px;
   color: #d4d4d8;

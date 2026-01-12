@@ -165,7 +165,7 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                                 {/* Delete Action */}
                                 <button
                                     onClick={() => handleDeleteContent(i)}
-                                    className="absolute right-0 top-1.5 p-2 opacity-0 group-hover/item:opacity-100 text-zinc-400 hover:text-red-500 transition-all"
+                                    className="delete-btn"
                                 >
                                     <Trash2 size={16} />
                                 </button>
