@@ -20,7 +20,7 @@ const Sidebar = ({ activeTool, onToolSelect }) => {
                         className={`sidebar-tool ${activeTool === id ? 'active' : ''}`}
                         onClick={() => onToolSelect(id)}
                     >
-                        <Icon size={22} className={activeTool === id ? "text-indigo-400" : ""} />
+                        <Icon size={22} />
                         <span className="sidebar-tool-label">{label}</span>
                         {activeTool === id && <div className="active-indicator" />}
                     </button>

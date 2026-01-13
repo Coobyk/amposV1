@@ -5,18 +5,30 @@ import SlideNav from './components/SlideNav';
 import SlideCanvas from './components/SlideCanvas';
 import LayoutPicker from './components/LayoutPicker';
 import StylePanel from './components/StylePanel';
+import AIPanel from './components/AIPanel';
+
 
 function App() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [activeTool, setActiveTool] = useState('text');
   const [isClosingStylePanel, setIsClosingStylePanel] = useState(false);
+  const [isClosingAIPanel, setIsClosingAIPanel] = useState(false);
+
 
   // Theme State
-  const [theme, setTheme] = useState({
-    mode: 'dark',
-    accent: '#6366f1',
-    font: 'minimal'
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('ampos_theme');
+    return savedTheme ? JSON.parse(savedTheme) : {
+      mode: 'dark',
+      accent: '#6366f1',
+      font: 'minimal'
+    };
   });
+
+  // Save Theme to LocalStorage
+  useEffect(() => {
+    localStorage.setItem('ampos_theme', JSON.stringify(theme));
+  }, [theme]);
 
   const [slides, setSlides] = useState([
     {
@@ -54,22 +66,28 @@ function App() {
 
     // Apply Accent
     root.style.setProperty('--accent-primary', theme.accent);
-    root.style.setProperty('--accent-secondary', `${theme.accent}20`); // 20 hex alpha
+    root.style.setProperty('--accent-secondary', `${theme.accent}20`); // 12% alpha approx
+    root.style.setProperty('--accent-glow', `${theme.accent}4d`); // 30% alpha for glow
+
 
     // Apply Fonts
-    let headingFont = "'Outfit', sans-serif";
+    let headingFont = "'Inter', sans-serif";
     let bodyFont = "'Inter', sans-serif";
+    let headingWeight = "800";
 
     if (theme.font === 'classic') {
-      headingFont = "'Times New Roman', serif";
-      bodyFont = "'Times New Roman', serif";
+      headingFont = "'Times New Roman', Times, serif";
+      bodyFont = "'Times New Roman', Times, serif";
+      headingWeight = "700"; // Times looks better at 700 than 800
     } else if (theme.font === 'bold') {
-      headingFont = "'Arial Black', sans-serif";
-      bodyFont = "'Arial', sans-serif";
+      headingFont = "'Outfit', sans-serif";
+      bodyFont = "'Outfit', sans-serif";
+      headingWeight = "800";
     }
 
     root.style.setProperty('--font-heading', headingFont);
     root.style.setProperty('--font-body', bodyFont);
+    root.style.setProperty('--font-weight-heading', headingWeight);
 
   }, [theme]);
 
@@ -101,6 +119,17 @@ function App() {
       }, 300); // Match animation duration
       return;
     }
+
+    // Toggle AI panel if already active
+    if (toolId === 'ai' && activeTool === 'ai') {
+      setIsClosingAIPanel(true);
+      setTimeout(() => {
+        setActiveTool('text');
+        setIsClosingAIPanel(false);
+      }, 300);
+      return;
+    }
+
 
     setActiveTool(toolId);
 
@@ -167,6 +196,24 @@ function App() {
               isClosing={isClosingStylePanel}
             />
           )}
+
+          {/* AI Panel Overlay */}
+          {activeTool === 'ai' && (
+            <AIPanel
+              slide={slides[activeSlide]}
+              onUpdate={(updates) => updateSlide(slides[activeSlide].id, updates)}
+              onClose={() => {
+                setIsClosingAIPanel(true);
+                setTimeout(() => {
+                  setActiveTool('text');
+                  setIsClosingAIPanel(false);
+                }, 300);
+              }}
+              isClosing={isClosingAIPanel}
+              theme={theme}
+            />
+          )}
+
         </div>
       </main>
     </div>

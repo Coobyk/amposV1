@@ -64,41 +64,41 @@ const LayoutPicker = ({ activeSlide, onLayoutSelect }) => {
 
     return (
         <div className="layout-picker">
-            <div className="text-xs font-bold text-zinc-500 uppercase tracking-widest mr-4">Suggested Layouts</div>
+            <div className="layout-picker-label">Suggested Layouts</div>
             {suggestions.map(({ id, label, renderConfig }) => (
                 <button
                     key={id}
                     className="layout-option group"
                     onClick={() => onLayoutSelect(id)}
                 >
-                    <div className="layout-option-preview relative overflow-hidden">
+                    <div className="layout-option-preview">
                         {/* Visual representation using mini-grid */}
                         <div className={`layout-mini-grid type-${renderConfig.type}`}>
-                            {renderConfig.showImage && <div className="mini-image bg-indigo-500/20 rounded-sm" />}
-                            <div className="mini-content flex flex-col gap-1.5 flex-1 p-2">
+                            {renderConfig.showImage && <div className="mini-image" />}
+                            <div className="mini-content">
                                 {/* Simulate actual title length */}
-                                <div className="h-1.5 bg-zinc-600 rounded-full w-3/4 mb-1" />
+                                <div className="mini-title-line" />
                                 {/* Simulate actual content lines */}
                                 {activeSlide?.content.length > 0 ? (
                                     activeSlide.content.slice(0, 3).map((_, i) => (
-                                        <div key={i} className="h-1 bg-zinc-700/50 rounded-full w-full" />
+                                        <div key={i} className="mini-content-line" />
                                     ))
                                 ) : (
                                     renderConfig.lines.map((width, i) => (
-                                        <div key={i} className="h-1 bg-zinc-700/50 rounded-full" style={{ width: `${width}%` }} />
+                                        <div key={i} className="mini-content-line" style={{ width: `${width}%` }} />
                                     ))
                                 )}
                             </div>
                         </div>
 
                         {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="layout-hover-overlay" />
                     </div>
                     <span className="layout-option-label">{label}</span>
                 </button>
             ))}
 
-            <div className="ml-auto pl-4 border-l border-white/10">
+            <div className="layout-picker-divider">
                 <button className="layout-picker-ai">
                     <Wand2 size={20} />
                 </button>

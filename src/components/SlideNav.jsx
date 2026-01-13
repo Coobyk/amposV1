@@ -28,17 +28,17 @@ const SlideNav = ({ slides, activeSlide, onSelectSlide, onAddSlide }) => {
                             <div className="slide-thumbnail-inner p-0 overflow-hidden relative">
                                 {/* Mini Grid representation */}
                                 <div className={`layout-mini-grid type-${config.type}`}>
-                                    {config.showImage && <div className="mini-image bg-zinc-700/30 rounded-sm" />}
-                                    <div className="mini-content flex flex-col gap-1 flex-1 justify-center p-1">
-                                        {slide.type === 'cover' && <div className="h-1.5 w-full bg-zinc-600 rounded-sm mb-1" />}
+                                    {config.showImage && <div className="mini-image" />}
+                                    <div className="mini-content">
+                                        {slide.type === 'cover' && <div className="mini-title-line" />}
                                         {config.lines.map((width, i) => (
-                                            <div key={i} className="h-0.5 bg-zinc-700/40 rounded-full" style={{ width: `${width}%` }} />
+                                            <div key={i} className="mini-content-line" style={{ width: `${width}%` }} />
                                         ))}
                                     </div>
                                 </div>
 
                                 {/* Active Overlay */}
-                                {activeSlide === index && <div className="absolute inset-0 bg-indigo-500/10 pointer-events-none" />}
+                                {activeSlide === index && <div className="layout-hover-overlay !opacity-100" />}
                             </div>
 
                             <span className="slide-thumbnail-number">{index + 1}</span>

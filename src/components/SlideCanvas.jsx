@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Plus, X, Trash2 } from 'lucide-react';
+import { Plus, X, Trash2, ImagePlus } from 'lucide-react';
 
 const SlideCanvas = ({ slide, onUpdate }) => {
     if (!slide) return null;
@@ -72,6 +72,8 @@ const SlideCanvas = ({ slide, onUpdate }) => {
     };
 
     const [gradientPosition, setGradientPosition] = useState(null);
+    const [underlineWidth, setUnderlineWidth] = useState(120);
+    const titleRef = useRef(null);
 
     // Set random gradient position on mount
     useEffect(() => {
@@ -84,6 +86,39 @@ const SlideCanvas = ({ slide, onUpdate }) => {
         const randomPos = positions[Math.floor(Math.random() * positions.length)];
         setGradientPosition(randomPos);
     }, [slide?.id]); // Re-randomize when slide changes
+
+    // Calculate Underline Width
+    useEffect(() => {
+        if (titleRef.current) {
+            const tempSpan = document.createElement('span');
+            const style = window.getComputedStyle(titleRef.current);
+            tempSpan.style.font = style.font;
+            tempSpan.style.fontWeight = style.fontWeight;
+            tempSpan.style.fontSize = style.fontSize;
+            tempSpan.style.fontFamily = style.fontFamily;
+            tempSpan.style.letterSpacing = style.letterSpacing;
+            tempSpan.style.visibility = 'hidden';
+            tempSpan.style.position = 'absolute';
+            tempSpan.style.whiteSpace = 'pre';
+            tempSpan.innerText = slide.title || "Slide Title";
+            document.body.appendChild(tempSpan);
+
+            const textWidth = tempSpan.offsetWidth;
+            const containerWidth = titleRef.current.offsetWidth || 800;
+
+            // Calculate 70% of text width, but cap it at 70% of the container width
+            const calculatedWidth = textWidth * 0.7;
+            const maxAllowedWidth = containerWidth * 0.7;
+
+            const newWidth = Math.max(120, Math.min(calculatedWidth, maxAllowedWidth));
+            setUnderlineWidth(newWidth);
+
+
+
+            document.body.removeChild(tempSpan);
+        }
+    }, [slide.title, slide.type]);
+
 
     const getLayoutClasses = (type) => {
         switch (type) {
@@ -102,14 +137,20 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                 <>
                     <div
                         className={`glow-effect glow-${gradientPosition.name}`}
-                        style={gradientPosition.style}
+                        style={{
+                            ...gradientPosition.style,
+                            animationDelay: '-2s',
+                            animationDuration: '22s'
+                        }}
                     />
                     <div
                         className={`glow-effect glow-${gradientPosition.name}`}
                         style={{
                             ...gradientPosition.style,
                             opacity: 0.08,
-                            background: 'var(--accent-secondary)'
+                            background: 'var(--accent-secondary)',
+                            animationDelay: '-10s',
+                            animationDuration: '28s'
                         }}
                     />
                 </>
@@ -127,27 +168,30 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                         <input
                             type="file"
                             ref={fileInputRef}
-                            className="hidden"
+                            className="hidden-file-input"
                             accept="image/*"
                             onChange={handleFileChange}
                         />
 
+
                         {slide.image ? (
-                            <div className="w-full h-full relative">
-                                <img src={slide.image} alt="Slide" className="w-full h-full object-cover rounded-xl" />
-                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white font-medium transition-opacity rounded-xl">
-                                    Change Image
+                            <div className="w-full h-full relative overflow-hidden rounded-xl">
+                                <img src={slide.image} alt="Slide" className="w-full h-full object-cover" />
+                                <div className="image-upload-overlay">
+                                    <ImagePlus size={24} />
+                                    <span>Change Image</span>
                                 </div>
                             </div>
                         ) : (
-                            <>
-                                <div className="image-placeholder-icon">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="9" cy="9" r="2" /><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></svg>
+                            <div className="image-upload-placeholder">
+                                <div className="upload-icon-circle">
+                                    <ImagePlus size={28} strokeWidth={1.5} />
                                 </div>
-                                <span className="slide-image-placeholder">Drop Image Here</span>
-                                <span className="slide-image-source">Supports JPG, PNG, WebP</span>
-                            </>
+                                <span className="upload-text-main">Click or Drop Image</span>
+                                <span className="upload-text-sub">Supports JPG, PNG, WebP</span>
+                            </div>
                         )}
+
                     </div>
                 )}
 
@@ -155,16 +199,24 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                 <div className={`slide-text-area ${slide.type === 'centered' ? 'items-center text-center' : ''}`}>
 
                     {/* Editable Title */}
-                    <textarea
-                        rows={1}
-                        value={slide.title}
-                        onChange={handleTitleChange}
-                        onInput={(e) => adjustHeight(e.target)}
-                        className={`slide-title-input ${slide.type === 'cover' ? 'large' : ''} ${slide.type === 'centered' ? 'text-center' : ''}`}
-                        placeholder="Slide Title"
+                    <div className="slide-title-container">
+                        <textarea
+                            ref={titleRef}
+                            rows={1}
+                            value={slide.title}
+                            onChange={handleTitleChange}
+                            onInput={(e) => adjustHeight(e.target)}
+                            className={`slide-title-input ${slide.type === 'cover' ? 'large' : ''} ${slide.type === 'centered' ? 'text-center' : ''}`}
+                            placeholder="Slide Title"
+                        />
+                    </div>
+
+
+                    <div
+                        className="slide-title-underline"
+                        style={{ width: `${underlineWidth}px` }}
                     />
 
-                    <div className="slide-title-underline" />
 
                     {/* Editable Subtitle */}
                     <textarea
@@ -201,11 +253,11 @@ const SlideCanvas = ({ slide, onUpdate }) => {
                         ))}
 
                         {/* Add Item Button */}
-                        <li className="slide-bullet opacity-50 hover:opacity-100 cursor-pointer w-full" onClick={handleAddContent}>
-                            <div className="w-2.5 h-2.5 rounded-full border border-zinc-400 flex items-center justify-center mr-0.5 mt-1.5">
-                                <Plus size={8} className="text-zinc-500" />
+                        <li className="slide-bullet add-item-bullet" onClick={handleAddContent}>
+                            <div className="add-item-icon">
+                                <Plus size={8} />
                             </div>
-                            <span className="text-zinc-400 font-medium">Add item</span>
+                            <span className="add-item-text">Add item</span>
                         </li>
                     </ul>
                 </div>

@@ -2,8 +2,8 @@ import React from 'react';
 import { Sun, Moon, Type, Check, Palette, X } from 'lucide-react';
 
 const fonts = [
-    { id: 'minimal', label: 'Minimal', family: "'Inter', sans-serif", heading: "'Outfit', sans-serif" },
-    { id: 'bold', label: 'Bold', family: "'Arial', sans-serif", heading: "'Arial Black', sans-serif" },
+    { id: 'minimal', label: 'Minimal', family: "'Inter', sans-serif", heading: "'Inter', sans-serif" },
+    { id: 'bold', label: 'Bold', family: "'Outfit', sans-serif", heading: "'Outfit', sans-serif" },
     { id: 'classic', label: 'Classic', family: "'Times New Roman', serif", heading: "'Times New Roman', serif" }
 ];
 
